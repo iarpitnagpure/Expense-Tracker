@@ -10,6 +10,7 @@ NPM Library:
 - @graphql-tools/merge
     Schema merging (@graphql-tools/merge and @graphql-tools/schema) consolidates the type definitions and resolvers from many local schema instances into a single executable schema.
 
+Usage:
 // Create new express server
 const app = express();
 
