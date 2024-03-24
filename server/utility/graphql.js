@@ -7,10 +7,18 @@ import combineResolvers from '../resolvers/index.js';
 export const startApolloServer = async (app) => {
     const apolloServer = new ApolloServer({
         typeDefs: combineTypeDefs,
-        resolvers: combineResolvers
+        resolvers: combineResolvers,
     });
 
     await apolloServer.start();
 
-    app.use('/graphql', express.json(), expressMiddleware(apolloServer));
+    app.use('/graphql',
+        express.json(),
+        expressMiddleware(
+            apolloServer,
+            {
+                context: async ({ req, res }) => ({ req, res })
+            }
+        )
+    );
 };

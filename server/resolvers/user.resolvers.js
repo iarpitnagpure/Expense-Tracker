@@ -1,3 +1,6 @@
+import signUpController from '../controllers/signup.controller.js';
+import loginController from '../controllers/login.controller.js';
+import logoutController from '../controllers/logout.controller.js';
 import { users } from '../dummyData/data.js';
 
 const userResolvers = {
@@ -7,13 +10,9 @@ const userResolvers = {
     },
   },
   Mutation: {
-    signup: (_, { username, name, password, gender }) => {
-      return users[0];
-    },
-    login: (_, { username, password }) => {
-      console.log('username, password', username, password);
-      return users;
-    }
+    signup: (_parent, { username, name, password, gender }, context) => signUpController({ username, name, password, gender }, context.res),
+    login: (_parent, { username, password }, context) => loginController({ username, password }, context.res),
+    logout: (_parent, _payload, context) => logoutController(context.res)
   }
 };
 
