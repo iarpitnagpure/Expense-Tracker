@@ -7,7 +7,7 @@ const loginController = async ({ username, password }, res) => {
         if (username && password) {
             const user = await Users.findOne({ username });
             if (user) {
-                const isPasswordValid = compareSync(password, user?.password || "");
+                const isPasswordValid = compareSync(password, user?.password || '');
                 if (isPasswordValid) {
                     await setCookies(user._id, res);
                     return user;
@@ -21,7 +21,7 @@ const loginController = async ({ username, password }, res) => {
             throw new Error('Please enter all required fields')
         }
     } catch (err) {
-        throw new Error(err.message || "Internal server error");
+        throw new Error(err.message || 'Internal server error in login controller');
     }
 };
 

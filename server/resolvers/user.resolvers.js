@@ -1,13 +1,11 @@
 import signUpController from '../controllers/signup.controller.js';
 import loginController from '../controllers/login.controller.js';
 import logoutController from '../controllers/logout.controller.js';
-import { users } from '../dummyData/data.js';
+import userController from '../controllers/user.controller.js';
 
 const userResolvers = {
   Query: {
-    users: () => {
-      return users
-    },
+    user: (_parent, _payload, context) => userController(context.req)
   },
   Mutation: {
     signup: (_parent, { username, name, password, gender }, context) => signUpController({ username, name, password, gender }, context.res),

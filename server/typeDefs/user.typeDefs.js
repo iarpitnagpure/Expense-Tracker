@@ -13,7 +13,7 @@ const userTypeDefs = `#graphql
     }
 
     type Query {
-        users: [User!]
+        user: User
     }
 
     type Mutation {

@@ -18,7 +18,7 @@ const signUpController = async ({ username, name, password, gender }, res) => {
             throw new Error('Please enter all required fields')
         }
     } catch (err) {
-        throw new Error(err.message || "Internal server error");
+        throw new Error(err.message || 'Internal server error in signup controller');
     }
 };
 
