@@ -25,17 +25,41 @@ export const startApolloServer = async (app) => {
 
     await apolloServer.start();
 
-    app.use('/graphql', express.json(), expressMiddleware(apolloServer));
+    app.use('/graphql',
+        express.json(),
+        cookieParser(),
+        expressMiddleware(
+            apolloServer,
+            {
+                context: async ({ req, res }) => {
+                    const { token } = req.cookies;
+                    if (token) {
+                        const user = jwt.verify(token, process.env.TOKEN_KEY);
+                        req.user = user;
+                    }
+                    return { req, res }
+                }
+            }
+        )
+    );
 };
+
+// Using Context we can pass req and res objects to mutation and query resolvers
 
 TypeDefs (Type Definitions):
 typeDefs stands for type definitions. It's a string (or an array of strings) that defines the shape of the GraphQL schema. GraphQL uses a schema definition language (SDL) to define types, queries, mutations, subscriptions, and more.
 Example:
+const userTypeDefs = `#graphql 
     type User {
         id: ID!
         name: String!
         email: String!
     }
+
+    type Query {
+        user: User
+    }
+`;
 
 resolvers:
 Resolvers are functions responsible for fetching the data for each field in your schema. Each field in your GraphQL schema corresponds to a resolver function that returns the data for that field.
@@ -43,9 +67,43 @@ Resolvers are organized by type and field name, mirroring the structure of your 
 Example:
     const resolvers = {
         Query: {
-            users: () => {
+            users: (_parent, _payload, context) => {
                 // Resolver logic to fetch users from database or any other source
                 return [{ id: 1, name: "Alice", email: "alice@example.com" }];
             }
         }
     };
+
+We can get data using Query mentioned abvove example.
+To update or create data we can use Mutations
+
+Mutations: 
+// Typedefs
+const userTypeDefs = `#graphql 
+    type User {
+        id: ID!
+        name: String!
+        email: String!
+    }
+
+    type Query {
+        user: User
+    }
+
+    type Mutation {
+        login(username: String!, password: String!): User
+    }
+`;
+// Resolvers
+Example:
+const resolvers = {
+    Query: {
+        users: (_parent, _payload, context) => {
+            // Resolver logic to fetch users from database or any other source
+            return [{ id: 1, name: "Alice", email: "alice@example.com" }];
+        }
+    },
+    Mutation: {
+        login: (_parent, { username, password }, context) => loginController({ username, password }, context.res),
+    }
+};
