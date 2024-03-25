@@ -6,12 +6,17 @@ const transactionTypeDefs = `#graphql
         paymentType: String!
         category: String!
         amount: Float!
-        location: String!
         date: String!
     }
 
     type Query {
         transactions: [Transaction]
+    }
+
+    type Mutation {
+        addTransaction(description: String!, paymentType: String!, category: String!,amount: Float!, date: String!): Transaction!
+        updateTransaction(transactionId: ID!, description: String, paymentType: String, category: String,amount: Float, date: String): Transaction!
+        deleteTransaction(transactionId: ID!): Transaction!
     }
 `;
 
