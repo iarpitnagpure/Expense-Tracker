@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.login-input-container, .signup-input-container {
+    width: 350px;
+}
