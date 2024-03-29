@@ -1,21 +1,21 @@
-'use client';
+"use client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const Login = () => {
-    const [username, setUserName] = useState('');
-    const [password, setUserPassword] = useState('');
+    const [username, setUserName] = useState("");
+    const [password, setUserPassword] = useState("");
     const history = useRouter();
 
     const handleLoginClick = () => {
     };
 
     const handleSignupClick = () => {
-        history.push('/signup');
+        history.push("/signup");
     };
 
     return <div className="flex overflow-hidden justify-center w-screen h-screen">
-        <div className="flex flex-col justify-center items-center overflow-hidden login-input-container">
+        <div className="flex flex-col justify-center items-center overflow-hidden w-[350px]">
             <label className="flex justify-center w-full m-3 text-xl font-semibold">
                 Login
             </label>

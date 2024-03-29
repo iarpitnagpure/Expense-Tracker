@@ -1,12 +1,12 @@
-'use client';
+"use client";
 import { useState } from "react";
 import Link from "next/link";
 
 const Signup = () => {
-    const [name, setName] = useState('');
-    const [username, setUserName] = useState('');
-    const [password, setUserPassword] = useState('');
-    const [gender, setGender] = useState('male');
+    const [name, setName] = useState("");
+    const [username, setUserName] = useState("");
+    const [password, setUserPassword] = useState("");
+    const [gender, setGender] = useState("male");
 
     const handleGenderRadioClick = (event) => {
         if (event.target.value !== gender) setGender(event.target.value);
@@ -16,7 +16,7 @@ const Signup = () => {
     };
 
     return <div className="flex overflow-hidden justify-center w-screen h-screen">
-        <div className="flex flex-col justify-center items-center overflow-hidden signup-input-container">
+        <div className="flex flex-col justify-center items-center overflow-hidden w-[350px]">
             <label className="flex justify-center w-full m-3 text-xl font-semibold">
                 Sign Up
             </label>
@@ -54,9 +54,9 @@ const Signup = () => {
                 />
             </label>
             <label className="flex items-center w-11/12 m-2">
-                <input type="radio" name="gender" value="male" className="radio radio-primary mr-2 ml-0.5" checked={gender === 'male'} onChange={handleGenderRadioClick} />
+                <input type="radio" name="gender" value="male" className="radio radio-primary mr-2 ml-0.5" checked={gender === "male"} onChange={handleGenderRadioClick} />
                 <span className="label-text mr-7">Male</span>
-                <input type="radio" name="gender" value="female" className="radio radio-primary mr-2" checked={gender === 'female'} onChange={handleGenderRadioClick} />
+                <input type="radio" name="gender" value="female" className="radio radio-primary mr-2" checked={gender === "female"} onChange={handleGenderRadioClick} />
                 <span className="label-text">Female</span>
             </label>
             <button
