@@ -49,7 +49,7 @@ const TransactionForm = () => {
             </select>
             <input
                 type="date"
-                className="input input-bordered input-secondary w-full max-w-xs max-w-xs m-2"
+                className="input input-bordered input-secondary w-full max-w-xs m-2"
                 placeholder="Select Date"
                 value={expenseDate}
                 onChange={(e) => setExpenseDate(e.target.value)}
