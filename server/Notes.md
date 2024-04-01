@@ -2,6 +2,7 @@ GraphQl:
 GraphQL is a query language for APIs and a runtime for executing those queries with your existing data. 
 It was developed by Facebook in 2012 and open-sourced in 2015.
 
+Backend (NodeJS):
 NPM Library:
 - graphql
 - @apollo/server: 
@@ -106,4 +107,38 @@ const resolvers = {
     Mutation: {
         login: (_parent, { username, password }, context) => loginController({ username, password }, context.res),
     }
+};
+
+
+Frontend (NextJS):
+
+NPM Library:
+graphql-request: Minimal GraphQL client supporting Node and browsers for scripts or simple apps
+
+Usages:
+//Create new request instance with GraphQLClient
+const { GraphQLClient } = require("graphql-request");
+const graphQlClientRequest = new GraphQLClient('API_URL',
+    {
+        credentials: "include",
+    }
+);
+
+// Write mutation or query
+const { gql } = require("graphql-request");
+const loginMutation = gql`
+    mutation Login($username: String!, $password: String!) {
+        login(username: $username, password: $password) {
+            _id
+        }
+}`;
+
+// API call
+const handleLoginClick = async () => {
+      try {
+          const data = await graphQlClientRequest.request(loginMutation, { username, password })
+          console.log(data);
+      } catch (e) {
+          console.log(e)
+      }
 };

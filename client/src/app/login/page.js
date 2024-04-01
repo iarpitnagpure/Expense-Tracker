@@ -1,13 +1,21 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import graphQlClientRequest from "../utility/graphQlClientRequest";
+import { loginMutation } from "../utility/mutations";
 
 const Login = () => {
     const [username, setUserName] = useState("");
     const [password, setUserPassword] = useState("");
     const history = useRouter();
 
-    const handleLoginClick = () => {
+    const handleLoginClick = async () => {
+        try {
+            const data = await graphQlClientRequest.request(loginMutation, { username, password })
+            console.log(data);
+        } catch (e) {
+            console.log(e)
+        }
     };
 
     const handleSignupClick = () => {

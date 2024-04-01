@@ -1,5 +1,6 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
+import cors from "cors";
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import jwt from 'jsonwebtoken';
@@ -17,6 +18,7 @@ export const startApolloServer = async (app) => {
     app.use('/graphql',
         express.json(),
         cookieParser(),
+        cors({ origin: process.env.CLIENT_URL, credentials: true }),
         expressMiddleware(
             apolloServer,
             {

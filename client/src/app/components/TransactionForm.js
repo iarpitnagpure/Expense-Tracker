@@ -56,7 +56,7 @@ const TransactionForm = () => {
             />
         </div>
         <div className="flex flex-row justify-center w-full">
-        <button className="btn btn-primary w-full max-w-xs m-4">Add Expense</button>
+            <button className="btn btn-primary border-secondary text-base w-full max-w-xs m-4">Add Expense</button>
         </div>
     </div>
 };
