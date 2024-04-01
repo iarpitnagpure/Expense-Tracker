@@ -8,5 +8,19 @@ const loginMutation = gql`
         }
 }`;
 
+const signUpMutation = gql`
+    mutation Mutation($username: String!, $name: String!, $password: String!, $gender: String!) {
+        signup(username: $username, name: $name, password: $password, gender: $gender) {
+            _id,
+            name,
+        }
+}`;
 
-export { loginMutation };
+const logoutMutation = gql`
+   mutation Mutation {
+        logout {
+            isUserLoggedOut
+        }  
+}`;
+
+export { loginMutation, signUpMutation, logoutMutation };

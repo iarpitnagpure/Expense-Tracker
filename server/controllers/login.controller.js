@@ -12,10 +12,10 @@ const loginController = async ({ username, password }, res) => {
                     await setCookies(user._id, res);
                     return user;
                 } else {
-                    throw new Error('Please enter correct username and password');
+                    throw new Error('Incorrect username or password');
                 }
             } else {
-                throw new Error('Please enter correct username and password');
+                throw new Error('Incorrect username or password');
             }
         } else {
             throw new Error('Please enter all required fields')

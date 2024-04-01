@@ -13,10 +13,6 @@ const UserSchema = new mongoose.Schema({
         type: String,
         require: true,
     },
-    profilePicture: {
-        type: String,
-        require: false,
-    },
     gender: {
         type: String,
         require: true,

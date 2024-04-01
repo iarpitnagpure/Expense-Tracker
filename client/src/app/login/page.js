@@ -9,11 +9,11 @@ import Toast from "../components/Toast";
 const Login = () => {
     const [username, setUserName] = useState("");
     const [password, setUserPassword] = useState("");
-    const { isError, errorMessage, isLoading } = useSelector((state) => state.user);
+    const { isError, errorMessage, isLoading, userInfo, userAuthenticated } = useSelector((state) => state.user);
     const dispatch = useDispatch();
     const history = useRouter();
 
-    const handleLoginClick = async () => {
+    const handleLoginClick = () => {
         if (username && password) {
             dispatch(loginUser({ username, password }));
         } else {
@@ -22,8 +22,16 @@ const Login = () => {
     };
 
     const handleSignupClick = () => {
+        dispatch(resetErrorState());
         history.push("/signup");
     };
+
+    useEffect(() => {
+        if (userAuthenticated && userInfo?._id) {
+            sessionStorage.setItem('loggedInUser', JSON.stringify(userInfo));
+            history.push("/dashboard");
+        }
+    }, [userAuthenticated]);
 
     return <div className="flex overflow-hidden justify-center w-screen h-screen">
         <div className="flex flex-col justify-center items-center overflow-hidden w-[350px]">
@@ -61,7 +69,7 @@ const Login = () => {
             <button className="btn btn-neutral w-11/12 mt-4 login-button" onClick={handleSignupClick}>Sign Up</button>
         </div>
         {isLoading && <Loader />}
-        {isError && <Toast errorMessage={errorMessage} clickHandler={() => dispatch(resetErrorState())}/>}
+        {isError && <Toast errorMessage={errorMessage} clickHandler={() => dispatch(resetErrorState())} />}
     </div>
 };
 

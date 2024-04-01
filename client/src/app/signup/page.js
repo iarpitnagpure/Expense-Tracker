@@ -1,19 +1,39 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { resetErrorState, setErrorState, signUpUser } from "../redux/slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+import Loader from "../components/Loader";
+import Toast from "../components/Toast";
 
 const Signup = () => {
     const [name, setName] = useState("");
     const [username, setUserName] = useState("");
     const [password, setUserPassword] = useState("");
     const [gender, setGender] = useState("male");
+    const { isError, errorMessage, isLoading, userAuthenticated, userInfo } = useSelector((state) => state.user);
+    const history = useRouter();
+    const dispatch = useDispatch();
 
     const handleGenderRadioClick = (event) => {
         if (event.target.value !== gender) setGender(event.target.value);
     };
 
     const handleSignupClick = () => {
+        if (name && username && password && gender) {
+            dispatch(signUpUser({ name, username, password, gender }));
+        } else {
+            dispatch(setErrorState());
+        }
     };
+
+    useEffect(() => {
+        if (userAuthenticated && userInfo?._id) {
+            sessionStorage.setItem('loggedInUser', JSON.stringify(userInfo));
+            history.push("/dashboard");
+        }
+    }, [userAuthenticated]);
 
     return <div className="flex overflow-hidden justify-center w-screen h-screen">
         <div className="flex flex-col justify-center items-center overflow-hidden w-[350px]">
@@ -66,9 +86,11 @@ const Signup = () => {
             </button>
             <label className="flex w-11/12 m-2 text-sm font-semibold">
                 <span className="label-text mr-1"> Already have an account?</span>
-                <Link href="/login" className="btn-link">Login</Link>
+                <Link href="/login" onClick={() => dispatch(resetErrorState())} className="btn-link">Login</Link>
             </label>
         </div>
+        {isLoading && <Loader />}
+        {isError && <Toast errorMessage={errorMessage} clickHandler={() => dispatch(resetErrorState())} />}
     </div>
 };
 
