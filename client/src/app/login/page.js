@@ -1,20 +1,23 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import graphQlClientRequest from "../utility/graphQlClientRequest";
-import { loginMutation } from "../utility/mutations";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser, resetErrorState, setErrorState } from "../redux/slices/userSlice";
+import Loader from "../components/Loader";
+import Toast from "../components/Toast";
 
 const Login = () => {
     const [username, setUserName] = useState("");
     const [password, setUserPassword] = useState("");
+    const { isError, errorMessage, isLoading } = useSelector((state) => state.user);
+    const dispatch = useDispatch();
     const history = useRouter();
 
     const handleLoginClick = async () => {
-        try {
-            const data = await graphQlClientRequest.request(loginMutation, { username, password })
-            console.log(data);
-        } catch (e) {
-            console.log(e)
+        if (username && password) {
+            dispatch(loginUser({ username, password }));
+        } else {
+            dispatch(setErrorState());
         }
     };
 
@@ -57,6 +60,8 @@ const Login = () => {
             <div className="divider ml-5 mr-5">Or</div>
             <button className="btn btn-neutral w-11/12 mt-4 login-button" onClick={handleSignupClick}>Sign Up</button>
         </div>
+        {isLoading && <Loader />}
+        {isError && <Toast errorMessage={errorMessage} clickHandler={() => dispatch(resetErrorState())}/>}
     </div>
 };
 
