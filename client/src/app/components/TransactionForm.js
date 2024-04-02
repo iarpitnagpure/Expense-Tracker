@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addTransaction, setErrorState } from "../redux/slices/transactionSlice";
 
 const TransactionForm = () => {
     const [amount, setAmount] = useState(0);
@@ -6,6 +8,23 @@ const TransactionForm = () => {
     const [paymentType, setPaymentType] = useState("");
     const [category, setCategory] = useState("");
     const [expenseDate, setExpenseDate] = useState("");
+    const dispatch = useDispatch();
+
+    const handleAddExpense = () => {
+        if (amount && description && paymentType && category && expenseDate) {
+            console.log(amount, description, paymentType, category, new Date(expenseDate));
+            dispatch(addTransaction(
+                {
+                    amount: parseFloat(amount),
+                    description,
+                    paymentType,
+                    category,
+                    date: new Date(expenseDate)
+                }));
+        } else {
+            dispatch(setErrorState());
+        }
+    };
 
     return <div className="max-w-[700px] gap-5 flex flex-col flex-wrap justify-center items-center">
         <div className="flex flex-wrap justify-center">
@@ -35,7 +54,7 @@ const TransactionForm = () => {
                 <option value={""} disabled>Payment Type</option>
                 <option value={"creditcard"}>Credit Card</option>
                 <option value={"bankaccount"}>Bank Account</option>
-                <option value={"saving"}>Cash</option>
+                <option value={"cash"}>Cash</option>
             </select>
             <select
                 className="select select-bordered select-secondary w-full max-w-xs m-2"
@@ -56,7 +75,12 @@ const TransactionForm = () => {
             />
         </div>
         <div className="flex flex-row justify-center w-full">
-            <button className="btn btn-primary border-secondary text-base w-full max-w-xs m-4">Add Expense</button>
+            <button
+                onClick={handleAddExpense}
+                className="btn btn-primary border-secondary text-base w-full max-w-xs m-4"
+            >
+                Add Expense
+            </button>
         </div>
     </div>
 };

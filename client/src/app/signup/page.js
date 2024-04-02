@@ -5,7 +5,7 @@ import { resetErrorState, setErrorState, signUpUser } from "../redux/slices/user
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import Loader from "../components/Loader";
-import Toast from "../components/Toast";
+import toast, { Toaster } from "react-hot-toast";
 
 const Signup = () => {
     const [name, setName] = useState("");
@@ -34,6 +34,13 @@ const Signup = () => {
             history.push("/dashboard");
         }
     }, [userAuthenticated]);
+
+    useEffect(() => {
+        if (isError) {
+            toast.error(errorMessage);
+            dispatch(resetErrorState());
+        }
+    }, [isError]);
 
     return <div className="flex overflow-hidden justify-center w-screen h-screen">
         <div className="flex flex-col justify-center items-center overflow-hidden w-[350px]">
@@ -90,7 +97,10 @@ const Signup = () => {
             </label>
         </div>
         {isLoading && <Loader />}
-        {isError && <Toast errorMessage={errorMessage} clickHandler={() => dispatch(resetErrorState())} />}
+        <Toaster
+            position="top-center"
+            reverseOrder={false}
+        />
     </div>
 };
 
