@@ -9,6 +9,7 @@ import { logoutUser, setUserAuthState } from "../redux/slices/userSlice";
 import { getAllTransaction, resetErrorState } from "../redux/slices/transactionSlice";
 import Loader from "../components/Loader";
 import toast, { Toaster } from "react-hot-toast";
+import TransactionCard from "../components/TransactionCards";
 
 const Dashboard = () => {
     const { userAuthenticated } = useSelector(state => state.user);
@@ -49,6 +50,7 @@ const Dashboard = () => {
             <TransactionChart />
             <TransactionForm />
         </div>
+        <TransactionCard />
         <Logout handleLogoutClick={handleLogoutClick} />
         {isLoading && <Loader />}
         <Toaster

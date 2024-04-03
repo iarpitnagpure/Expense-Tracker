@@ -101,7 +101,7 @@ const userSlice = createSlice({
             .addCase(loginUser.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.errorMessage = action.payload;
+                state.errorMessage = 'Something went wrong';
             })
             .addCase(signUpUser.pending, (state) => {
                 state.isLoading = true;
@@ -121,7 +121,7 @@ const userSlice = createSlice({
             .addCase(signUpUser.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.errorMessage = action.payload;
+                state.errorMessage = 'Something went wrong';
             })
             .addCase(logoutUser.pending, (state) => {
                 state.isLoading = true;
@@ -144,7 +144,7 @@ const userSlice = createSlice({
             .addCase(logoutUser.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.errorMessage = action.payload;
+                state.errorMessage = 'Something went wrong';
             })
     }
 });

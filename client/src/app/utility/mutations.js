@@ -30,7 +30,8 @@ const getAllTransactionMutation = gql`
         amount,
         category,
         date,
-        description
+        description,
+        paymentType
       }
 }`;
 
@@ -41,7 +42,8 @@ const addTransactionMutation = gql`
             amount,
             category,
             date,
-            description
+            description,
+            paymentType
       }
 }`
 

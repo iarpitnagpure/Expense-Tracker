@@ -71,7 +71,7 @@ const transactionSlice = createSlice({
             .addCase(getAllTransaction.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.errorMessage = action.payload;
+                state.errorMessage = 'Something went wrong';
             })
             .addCase(addTransaction.pending, (state) => {
                 state.isLoading = true;
@@ -90,7 +90,7 @@ const transactionSlice = createSlice({
             .addCase(addTransaction.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.errorMessage = action.payload;
+                state.errorMessage = 'Something went wrong';
             })
     }
 });

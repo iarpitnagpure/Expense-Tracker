@@ -12,14 +12,13 @@ const TransactionForm = () => {
 
     const handleAddExpense = () => {
         if (amount && description && paymentType && category && expenseDate) {
-            console.log(amount, description, paymentType, category, new Date(expenseDate));
             dispatch(addTransaction(
                 {
                     amount: parseFloat(amount),
                     description,
                     paymentType,
                     category,
-                    date: new Date(expenseDate)
+                    date: expenseDate
                 }));
         } else {
             dispatch(setErrorState());
