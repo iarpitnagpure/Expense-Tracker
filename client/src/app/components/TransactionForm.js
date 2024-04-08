@@ -1,33 +1,57 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-import { addTransaction, setErrorState } from "../redux/slices/transactionSlice";
+import { addTransaction, setErrorState, updateTransaction } from "../redux/slices/transactionSlice";
 
-const TransactionForm = () => {
+const TransactionForm = ({ isTransactionEditForm, selectedTransaction }) => {
     const [amount, setAmount] = useState(0);
     const [description, setDescription] = useState("");
     const [paymentType, setPaymentType] = useState("");
     const [category, setCategory] = useState("");
     const [expenseDate, setExpenseDate] = useState("");
     const dispatch = useDispatch();
+    const history = useRouter();
 
-    const handleAddExpense = () => {
+    const handleAddEditExpense = () => {
         if (amount && description && paymentType && category && expenseDate) {
-            dispatch(addTransaction(
-                {
-                    amount: parseFloat(amount),
-                    description,
-                    paymentType,
-                    category,
-                    date: expenseDate
-                }));
+            isTransactionEditForm
+                ? dispatch(updateTransaction(
+                    {
+                        transactionId: selectedTransaction._id,
+                        amount: parseFloat(amount),
+                        description,
+                        paymentType,
+                        category,
+                        date: expenseDate
+                    }))
+                : dispatch(addTransaction(
+                    {
+                        amount: parseFloat(amount),
+                        description,
+                        paymentType,
+                        category,
+                        date: expenseDate
+                    }));
         } else {
             dispatch(setErrorState());
         }
     };
 
+    useEffect(() => {
+        if (selectedTransaction) {
+            setAmount(selectedTransaction.amount);
+            setDescription(selectedTransaction.description);
+            setPaymentType(selectedTransaction.paymentType);
+            setCategory(selectedTransaction.category);
+            setExpenseDate(new Date(Number(selectedTransaction.date)).toLocaleDateString('en-CA'));
+        }
+    }, [selectedTransaction]);
+
     return <div className="max-w-[700px] gap-5 flex flex-col flex-wrap justify-center items-center">
         <div className="flex flex-wrap justify-center">
-            <label className="input input-bordered input-secondary flex items-center gap-2 w-full max-w-xs m-2">
+            <label className={`input input-bordered flex items-center gap-2 w-full max-w-xs m-2 
+                        ${isTransactionEditForm ? 'input-primary' : 'input-secondary'}`}
+            >
                 <input
                     type="number"
                     placeholder="Amount"
@@ -36,7 +60,9 @@ const TransactionForm = () => {
                     onChange={(e) => setAmount(e.target.value)}
                 />
             </label>
-            <label className="input input-bordered input-secondary flex items-center gap-2 w-full max-w-xs m-2">
+            <label className={`input input-bordered flex items-center gap-2 w-full max-w-xs m-2 
+                    ${isTransactionEditForm ? 'input-primary' : 'input-secondary'}`}
+            >
                 <input
                     type="text"
                     placeholder="Description"
@@ -46,7 +72,8 @@ const TransactionForm = () => {
                 />
             </label>
             <select
-                className="select select-bordered select-secondary w-full max-w-xs m-2"
+                className={`select select-bordered w-full max-w-xs m-2 
+                    ${isTransactionEditForm ? 'select-primary' : 'select-secondary'}`}
                 value={paymentType}
                 onChange={(e) => setPaymentType(e.target.value)}
             >
@@ -56,7 +83,8 @@ const TransactionForm = () => {
                 <option value={"cash"}>Cash</option>
             </select>
             <select
-                className="select select-bordered select-secondary w-full max-w-xs m-2"
+                className={`select select-bordered w-full max-w-xs m-2 
+                    ${isTransactionEditForm ? 'select-primary' : 'select-secondary'}`}
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
             >
@@ -67,19 +95,27 @@ const TransactionForm = () => {
             </select>
             <input
                 type="date"
-                className="input input-bordered input-secondary w-full max-w-xs m-2"
+                className={`input input-bordered w-full max-w-xs m-2
+                    ${isTransactionEditForm ? 'input-primary' : 'input-secondary'}`}
                 placeholder="Select Date"
                 value={expenseDate}
                 onChange={(e) => setExpenseDate(e.target.value)}
             />
         </div>
-        <div className="flex flex-row justify-center w-full">
+        <div className="flex flex-row flex-wrap justify-center w-full">
             <button
-                onClick={handleAddExpense}
-                className="btn btn-primary border-secondary text-base w-full max-w-xs m-4"
+                onClick={handleAddEditExpense}
+                className={`btn btn-primary text-base w-full max-w-xs m-4 
+                    ${isTransactionEditForm ? 'border-primary' : 'border-secondary'}`}
             >
-                Add Expense
+                {isTransactionEditForm ? 'Update Expense' : 'Add Expense'}
             </button>
+            {isTransactionEditForm && <button
+                onClick={() => history.push('/dashboard')}
+                className="btn btn-link text-base w-full max-w-xs m-4"
+            >
+                Dashboard
+            </button>}
         </div>
     </div>
 };

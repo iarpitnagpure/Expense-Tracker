@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { useSelector } from "react-redux";
 
 const TransactionChart = () => {
     const [chartData, setChartData] = useState({
@@ -77,7 +77,7 @@ const TransactionChart = () => {
 
     ChartJS.register(ArcElement, Tooltip, Legend);
 
-    return allTransaction.length ? <div className="h-[330px] w-[330px] md:h-[360px] md:w-[360px]">
+    return allTransaction.length ? <div className="h-[360px] w-[360px] md:h-[360px] md:w-[360px]">
         <Doughnut data={chartData} className="tranasction-chart" />
     </div> : <></>
 };

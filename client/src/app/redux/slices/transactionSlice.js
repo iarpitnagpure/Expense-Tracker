@@ -1,6 +1,6 @@
 const { createSlice, createAsyncThunk } = require("@reduxjs/toolkit");
 import graphQlClientRequest from "@/app/utility/graphQlClientRequest";
-import { addTransactionMutation, getAllTransactionMutation } from "@/app/utility/mutations";
+import { addTransactionMutation, deleteTransactionMutation, getAllTransactionMutation, updateTransactionMutation } from "@/app/utility/mutations";
 
 export const getAllTransaction = createAsyncThunk('get/transaction', async () => {
     try {
@@ -34,13 +34,48 @@ export const addTransaction = createAsyncThunk('post/transaction', async (transa
     }
 });
 
+export const updateTransaction = createAsyncThunk('update/transaction', async (transaction) => {
+    try {
+        const data = await graphQlClientRequest.request(updateTransactionMutation, transaction);
+        return data;
+    } catch (error) {
+        const firstError = error.response.errors[0];
+        const errorObject = {
+            message: firstError.message,
+            locations: firstError.locations,
+            path: firstError.path,
+            extensions: firstError.extensions,
+        };
+        return errorObject;
+    }
+});
+
+export const deleteTransaction = createAsyncThunk('delete/transaction', async (transactionId) => {
+    try {
+        const data = await graphQlClientRequest.request(deleteTransactionMutation, { transactionId });
+        return data;
+    } catch (error) {
+        const firstError = error.response.errors[0];
+        const errorObject = {
+            message: firstError.message,
+            locations: firstError.locations,
+            path: firstError.path,
+            extensions: firstError.extensions,
+        };
+        return errorObject;
+    }
+});
+
 const transactionSlice = createSlice({
     name: 'transaction',
     initialState: {
         isLoading: false,
         isError: false,
         errorMessage: '',
-        allTransaction: []
+        allTransaction: [],
+        isTransactionUpdateSucess: false,
+        isTransactionPostSucess: false,
+        isTransactionDeleteSucess: false,
     },
     reducers: {
         resetErrorState: (state) => {
@@ -51,6 +86,11 @@ const transactionSlice = createSlice({
             state.isError = true;
             state.errorMessage = 'Please enter all required fields';
         },
+        resetTransactionToastState: (state) => {
+            state.isTransactionUpdateSucess = false;
+            state.isTransactionPostSucess = false;
+            state.isTransactionDeleteSucess = false;
+        }
     },
     extraReducers(builder) {
         builder
@@ -68,7 +108,7 @@ const transactionSlice = createSlice({
                     }
                 }
             })
-            .addCase(getAllTransaction.rejected, (state, action) => {
+            .addCase(getAllTransaction.rejected, (state) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.errorMessage = 'Something went wrong';
@@ -84,10 +124,55 @@ const transactionSlice = createSlice({
                 } else {
                     if (action.payload?.addTransaction) {
                         state.allTransaction.push(action.payload.addTransaction);
+                        state.isTransactionPostSucess = true;
                     }
                 }
             })
-            .addCase(addTransaction.rejected, (state, action) => {
+            .addCase(addTransaction.rejected, (state) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.errorMessage = 'Something went wrong';
+            })
+            .addCase(updateTransaction.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(updateTransaction.fulfilled, (state, action) => {
+                state.isLoading = false;
+                if (action.payload?.message) {
+                    state.isError = true;
+                    state.errorMessage = action.payload.message;
+                } else {
+                    if (action.payload?.updateTransaction) {
+                        state.allTransaction = state.allTransaction.map((item) => {
+                            return item._id === action.payload.updateTransaction._id
+                                ? action.payload.updateTransaction
+                                : item
+                        });
+                        state.isTransactionUpdateSucess = true;
+                    }
+                }
+            })
+            .addCase(updateTransaction.rejected, (state) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.errorMessage = 'Something went wrong';
+            })
+            .addCase(deleteTransaction.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(deleteTransaction.fulfilled, (state, action) => {
+                state.isLoading = false;
+                if (action.payload?.message) {
+                    state.isError = true;
+                    state.errorMessage = action.payload.message;
+                } else {
+                    if (action.payload?.deleteTransaction) {
+                        state.allTransaction = state.allTransaction.filter((item) => item._id !== action.payload.deleteTransaction._id);
+                        state.isTransactionDeleteSucess = true;
+                    }
+                }
+            })
+            .addCase(deleteTransaction.rejected, (state) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.errorMessage = 'Something went wrong';
@@ -95,6 +180,6 @@ const transactionSlice = createSlice({
     }
 });
 
-export const { resetErrorState, setErrorState } = transactionSlice.actions;
+export const { resetErrorState, setErrorState, resetTransactionToastState } = transactionSlice.actions;
 
 export default transactionSlice.reducer;

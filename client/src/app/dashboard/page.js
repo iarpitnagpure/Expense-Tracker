@@ -1,19 +1,26 @@
 "use client";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import toast, { Toaster } from "react-hot-toast";
 import Logout from "../components/LogoutButton";
 import TransactionChart from "../components/TransactionChart";
 import TransactionForm from "../components/TransactionForm";
 import { logoutUser, setUserAuthState } from "../redux/slices/userSlice";
-import { getAllTransaction, resetErrorState } from "../redux/slices/transactionSlice";
+import { getAllTransaction, resetErrorState, resetTransactionToastState } from "../redux/slices/transactionSlice";
 import Loader from "../components/Loader";
-import toast, { Toaster } from "react-hot-toast";
 import TransactionCard from "../components/TransactionCards";
 
 const Dashboard = () => {
     const { userAuthenticated } = useSelector(state => state.user);
-    const { isLoading, isError, errorMessage } = useSelector(state => state.transaction);
+    const {
+        isLoading,
+        isError,
+        errorMessage,
+        isTransactionUpdateSucess,
+        isTransactionPostSucess,
+        isTransactionDeleteSucess
+    } = useSelector(state => state.transaction);
     const dispatch = useDispatch();
     const history = useRouter();
 
@@ -43,6 +50,15 @@ const Dashboard = () => {
             dispatch(resetErrorState());
         }
     }, [isError]);
+
+    useEffect(() => {
+        if (isTransactionDeleteSucess) { toast.success('Expense Deleted') }
+        if (isTransactionPostSucess) { toast.success('Expense Added') }
+    }, [isTransactionDeleteSucess, isTransactionPostSucess]);
+
+    useEffect(() => {
+        if (isTransactionUpdateSucess || isTransactionDeleteSucess || isTransactionPostSucess) dispatch(resetTransactionToastState());
+    }, [isTransactionUpdateSucess, isTransactionDeleteSucess, isTransactionPostSucess]);
 
     return <div className="flex flex-col justify-start items-center w-screen h-screen overflow-x-hidden">
         <h3 className="text-6xl font-bold m-5 text-center leading-[68px] border-webkit hover:cursor-pointer">Expense Dashboard</h3>

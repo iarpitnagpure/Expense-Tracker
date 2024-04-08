@@ -6,3 +6,8 @@
     -webkit-text-stroke: 1px #ff52d9;
     font-family: Verdana,Arial,"Liberation Sans","Bitstream Vera",Geneva,Helvetica,sans-serif;
 }
+
+.border-webkit-1 {
+    -webkit-text-stroke: 1px rgba(54, 162, 235);
+    font-family: Verdana,Arial,"Liberation Sans","Bitstream Vera",Geneva,Helvetica,sans-serif;
+}

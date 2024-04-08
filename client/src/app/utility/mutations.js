@@ -47,4 +47,31 @@ const addTransactionMutation = gql`
       }
 }`
 
-export { loginMutation, signUpMutation, logoutMutation, getAllTransactionMutation, addTransactionMutation };
+const updateTransactionMutation = gql`
+    mutation Mutation($transactionId: ID!, $description: String, $paymentType: String, $category: String, $amount: Float, $date: String) {
+     updateTransaction(transactionId: $transactionId, description: $description, paymentType: $paymentType, category: $category, amount: $amount, date: $date) {
+        _id,
+        amount,
+        category,
+        date,
+        description,
+        paymentType
+     }
+}`
+
+const deleteTransactionMutation = gql`
+    mutation Mutation($transactionId: ID!) {
+      deleteTransaction(transactionId: $transactionId) {
+        _id
+      }
+}`
+
+export {
+    loginMutation,
+    signUpMutation,
+    logoutMutation,
+    getAllTransactionMutation,
+    addTransactionMutation,
+    updateTransactionMutation,
+    deleteTransactionMutation
+};
