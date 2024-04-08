@@ -10,9 +10,10 @@ import { logoutUser, setUserAuthState } from "../redux/slices/userSlice";
 import { getAllTransaction, resetErrorState, resetTransactionToastState } from "../redux/slices/transactionSlice";
 import Loader from "../components/Loader";
 import TransactionCard from "../components/TransactionCards";
+import { clearAllCookies } from "../utility/cookieHelper";
 
 const Dashboard = () => {
-    const { userAuthenticated } = useSelector(state => state.user);
+    const { userAuthenticated, isForceLogout } = useSelector(state => state.user);
     const {
         isLoading,
         isError,
@@ -23,6 +24,10 @@ const Dashboard = () => {
     } = useSelector(state => state.transaction);
     const dispatch = useDispatch();
     const history = useRouter();
+
+    const redirectToLogin = () => {
+        history.push('/login');
+    };
 
     const handleLogoutClick = () => {
         sessionStorage.removeItem('loggedInUser');
@@ -36,13 +41,18 @@ const Dashboard = () => {
         } else if (loggedInUser?._id) {
             dispatch(setUserAuthState(loggedInUser));
         } else {
-            history.push('/login');
+            redirectToLogin();
         }
     };
 
     useEffect(() => {
-        verifyUserAuthentication();
-    }, [userAuthenticated]);
+        if (isForceLogout) {
+            clearAllCookies();
+            redirectToLogin();
+        } else {
+            verifyUserAuthentication();
+        }
+    }, [userAuthenticated, isForceLogout]);
 
     useEffect(() => {
         if (isError) {
@@ -59,6 +69,7 @@ const Dashboard = () => {
     useEffect(() => {
         if (isTransactionUpdateSucess || isTransactionDeleteSucess || isTransactionPostSucess) dispatch(resetTransactionToastState());
     }, [isTransactionUpdateSucess, isTransactionDeleteSucess, isTransactionPostSucess]);
+
 
     return <div className="flex flex-col justify-start items-center w-screen h-screen overflow-x-hidden">
         <h3 className="text-6xl font-bold m-5 text-center leading-[68px] border-webkit hover:cursor-pointer">Expense Dashboard</h3>

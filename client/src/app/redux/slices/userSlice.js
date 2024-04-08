@@ -59,6 +59,7 @@ const userSlice = createSlice({
         isLoading: false,
         isError: false,
         errorMessage: '',
+        isForceLogout: false,
     },
     reducers: {
         setUserAuthState: (state, action) => {
@@ -71,6 +72,7 @@ const userSlice = createSlice({
             state.isLoading = false;
             state.isError = false;
             state.errorMessage = '';
+            state.isForceLogout = false;
         },
         setErrorState: (state) => {
             state.isError = true;
@@ -145,6 +147,7 @@ const userSlice = createSlice({
                 state.isLoading = false;
                 state.isError = true;
                 state.errorMessage = 'Something went wrong';
+                state.isForceLogout = true;
             })
     }
 });

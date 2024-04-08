@@ -3,13 +3,13 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
-import { loginUser, resetErrorState, setErrorState } from "../redux/slices/userSlice";
+import { loginUser, resetErrorState, resetUserSlice, setErrorState } from "../redux/slices/userSlice";
 import Loader from "../components/Loader";
 
 const Login = () => {
     const [username, setUserName] = useState("");
     const [password, setUserPassword] = useState("");
-    const { isError, errorMessage, isLoading, userInfo, userAuthenticated } = useSelector((state) => state.user);
+    const { isError, errorMessage, isLoading, userInfo, userAuthenticated, isForceLogout } = useSelector((state) => state.user);
     const dispatch = useDispatch();
     const history = useRouter();
 
@@ -39,6 +39,10 @@ const Login = () => {
             dispatch(resetErrorState());
         }
     }, [isError]);
+
+    useEffect(() => {
+        if (isForceLogout) dispatch(resetUserSlice());
+    }, [isForceLogout]);
 
     return <div className="flex overflow-hidden justify-center w-screen h-screen">
         <div className="flex flex-col justify-center items-center overflow-hidden w-[350px]">
