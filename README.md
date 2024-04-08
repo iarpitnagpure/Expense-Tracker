@@ -2,6 +2,8 @@
 
 Expense Tracker App helps you keep track of your daily expenses.
 
+https://github.com/iarpitnagpure/Expense-Tracker/assets/100276120/bddcaf18-1e31-4afa-ac1d-14f733452b76
+
 ## Tech Stack
 
 ### Frontend:
